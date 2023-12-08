@@ -3,7 +3,7 @@ use std::fs::File;
 use std::io::{prelude::*, BufReader};
 use std::path::PathBuf;
 
-use algorithms::Point;
+use geo::Point;
 
 fn main() -> std::io::Result<()> {
     let points = read_input(PathBuf::from("data/tsp_input.txt"))?;
@@ -18,7 +18,7 @@ fn main() -> std::io::Result<()> {
     Ok(())
 }
 
-fn read_input(path: PathBuf) -> std::io::Result<Vec<Point<usize>>> {
+fn read_input(path: PathBuf) -> std::io::Result<Vec<Point>> {
     let file = File::open(path)?;
     let reader = BufReader::new(file);
 
@@ -26,16 +26,25 @@ fn read_input(path: PathBuf) -> std::io::Result<Vec<Point<usize>>> {
 
     let _n: usize = lines.next().unwrap()?.parse().unwrap();
     let points = lines
-        .map(|line| Point::try_from(line.unwrap()).unwrap())
+        .map(|line| {
+            let bind = line.unwrap();
+            let mut values = bind.split_whitespace();
+
+            let x = values.next().unwrap().parse().unwrap();
+            let y = values.next().unwrap().parse().unwrap();
+
+            (x, y)
+        })
+        .map(|xy| Point::from(xy))
         .collect();
 
     Ok(points)
 }
 
-fn output(length: f64, points: Vec<Point<usize>>) {
+fn output(length: f64, points: Vec<Point>) {
     println!("{}", length);
     for point in points {
-        println!("{} {}", point.x, point.y);
+        println!("{} {}", point.x(), point.y());
     }
 }
 

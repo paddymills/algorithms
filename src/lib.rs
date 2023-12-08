@@ -1,9 +1,7 @@
 
 mod kmeans;
-mod point;
 
 pub use kmeans::{Cluster, KMeans};
-pub use point::Point;
 
 // #[cfg(test)]
 // mod tests {
